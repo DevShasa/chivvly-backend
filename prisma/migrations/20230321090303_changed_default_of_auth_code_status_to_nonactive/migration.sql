@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "AuthCode" ALTER COLUMN "status" SET DEFAULT 'NONACTIVE';

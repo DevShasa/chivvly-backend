@@ -1,0 +1,7 @@
+{
+  "url": "%%DEV_URL%%",
+  "headers": {
+    "stripe-signature": "t=15778368",
+    "Content-Type": "application/json"
+  }
+}

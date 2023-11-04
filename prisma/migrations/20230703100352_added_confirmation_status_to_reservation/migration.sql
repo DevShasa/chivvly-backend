@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "tReservationStatus" ADD VALUE 'PENDING_CONFIRMATION';

@@ -1,0 +1,17 @@
+-- AlterTable
+ALTER TABLE "AuthCode" ALTER COLUMN "expiry_date_time" SET DATA TYPE TIMESTAMPTZ(3);
+
+-- AlterTable
+ALTER TABLE "DriverCredentials" ALTER COLUMN "driver_licence_expiry" SET DATA TYPE TIMESTAMPTZ(3);
+
+-- AlterTable
+ALTER TABLE "Payment" ALTER COLUMN "date_time" SET DATA TYPE TIMESTAMPTZ(3);
+
+-- AlterTable
+ALTER TABLE "Payout" ALTER COLUMN "date" SET DATA TYPE TIMESTAMPTZ(3);
+
+-- AlterTable
+ALTER TABLE "Reservation" ALTER COLUMN "start_date_time" SET DATA TYPE TIMESTAMPTZ(3),
+ALTER COLUMN "end_date_time" SET DATA TYPE TIMESTAMPTZ(3),
+ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ(3),
+ALTER COLUMN "updated_at" SET DATA TYPE TIMESTAMPTZ(3);

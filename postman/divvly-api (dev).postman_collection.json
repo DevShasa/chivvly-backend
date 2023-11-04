@@ -1,0 +1,903 @@
+{
+	"info": {
+		"_postman_id": "9d078f64-d037-4707-b822-6c7ccc858efb",
+		"name": "divvly-api (dev)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15579151"
+	},
+	"item": [
+		{
+			"name": "market",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/market",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"market"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/markets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"markets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "submarket",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"market_id\": \"32644c16-7c87-465c-89cd-8eec6e0b3309\",\n    \"name\": \"Nairobi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/submarket",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"submarket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/submarkets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"submarkets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "station",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kenya\",\n    \"sub_market_id\": \"19d309dc-fb29-409b-9d45-de67401bb768\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/station",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"station"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/stations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"stations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nairobi\",\n    \"description\": \"Nairobi\",\n    \"image\": \"https://images.pexels.com/photos/12851969/pexels-photo-12851969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/location/station?station_id=15767245-32e3-43dc-8f4a-340a105e0c87",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"location",
+								"station"
+							],
+							"query": [
+								{
+									"key": "station_id",
+									"value": "15767245-32e3-43dc-8f4a-340a105e0c87"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fname\": \"jane\",\n    \"lname\": \"doe\",\n    \"email\": \"janedoe@email.com\",\n    \"handle\": \"jane\",\n    \"market_id\": \"32644c16-7c87-465c-89cd-8eec6e0b3309\",\n    \"user_type\": \"HOST\",\n    \"sub_market_id\": \"19d309dc-fb29-409b-9d45-de67401bb768\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"profile_pic_url\": \"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user_settings",
+			"item": [
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/settings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notifications_enabled\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/settings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"some token\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/settings/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "vehicles",
+			"item": [
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"color\": \"gray\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/?vehicle_id=ea3721d4-c58e-4b59-b4b3-05e0841bb7f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							],
+							"query": [
+								{
+									"key": "vehicle_id",
+									"value": "ea3721d4-c58e-4b59-b4b3-05e0841bb7f8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vehicle\": {\n        \"station_id\": \"15767245-32e3-43dc-8f4a-340a105e0c87\",\n        \"make\": \"BMW\",\n        \"model\": \"1 series\",\n        \"plate\": \"KL43g900\",\n        \"transmission\": \"AUTOMATIC\",\n        \"year\": 2020\n    },\n    \"pictures\": [\n        \"https://images.pexels.com/photos/12810164/pexels-photo-12810164.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\",\n        \"https://images.pexels.com/photos/9050493/pexels-photo-9050493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\",\n        \"https://images.pexels.com/photos/12086412/pexels-photo-12086412.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\",\n        \"https://images.pexels.com/photos/99435/pexels-photo-99435.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reservations",
+			"item": [
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reservation/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reservation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reservation/?reservation_id=78fdb829-b4c0-41c4-ab28-ca7caa18bf88",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reservation",
+								""
+							],
+							"query": [
+								{
+									"key": "reservation_id",
+									"value": "78fdb829-b4c0-41c4-ab28-ca7caa18bf88"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vehicle_id\": \"ea3721d4-c58e-4b59-b4b3-05e0841bb7f8\",\n    \"start_date_time\": 1679497200000,\n    \"end_date_time\": 1679508000000,\n    \"duration\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reservation/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reservation",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "paymentmethods",
+			"item": [
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/paymenttypes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"paymenttypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"color\": \"gray\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/?vehicle_id=ea3721d4-c58e-4b59-b4b3-05e0841bb7f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								""
+							],
+							"query": [
+								{
+									"key": "vehicle_id",
+									"value": "ea3721d4-c58e-4b59-b4b3-05e0841bb7f8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"card_number\": \"4242424242424242\",\n    \"cvc\": \"444\",\n    \"customer_id\": \"cus_NULVqE53KrUzkJ\",\n    \"exp_year\": 2027,\n    \"exp_month\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/paymenttypes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"paymenttypes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authcode",
+			"item": [
+				{
+					"name": "verify",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authcode/?auth_code=fc086399-a527-4281-ae3c-49f34f205963",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authcode",
+								""
+							],
+							"query": [
+								{
+									"key": "auth_code",
+									"value": "fc086399-a527-4281-ae3c-49f34f205963"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"status\": \"NONACTIVE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authcode/?auth_code_id=46d1192f-454b-42e0-a308-c4538d35f672",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authcode",
+								""
+							],
+							"query": [
+								{
+									"key": "auth_code_id",
+									"value": "46d1192f-454b-42e0-a308-c4538d35f672"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host_id\": \"8b80c60c-ff46-4334-9d9f-c404293f37be\",\n    \"vehicle_id\": \"ea3721d4-c58e-4b59-b4b3-05e0841bb7f8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authcode",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authcode"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "issues",
+			"item": [
+				{
+					"name": "fetch",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Kenya\",\n    \"name\": \"Kenya\",\n    \"currency\": \"KES\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/issues",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"complaint\": \"something went wrong\",\n    \"market_id\": \"32644c16-7c87-465c-89cd-8eec6e0b3309\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/issues/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"issues",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

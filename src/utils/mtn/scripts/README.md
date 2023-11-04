@@ -1,0 +1,1 @@
+## These are devonly scripts meant for the creation of MTN API users for sandbox environments.

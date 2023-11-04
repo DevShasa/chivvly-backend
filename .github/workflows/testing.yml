@@ -1,0 +1,197 @@
+name: divvly-testing
+
+on:
+  pull_request:
+    branches:
+      - WAK-Sprint-2023-*
+jobs:
+  Test:
+    if: true
+    runs-on: [self-hosted, testing]
+    environment: Testing
+    env:
+      RUNNER_LABEL: Niebex_KE_Testing
+      MONGO_CONNECTION_STRING: ${{secrets.MONGO_CONNECTION_STRING}}
+      PORT: ${{secrets.PORT}}
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      STRIPE_SECRET_KEY: ${{secrets.STRIPE_SECRET_KEY}}
+      APP_SECRET: ${{secrets.APP_SECRET}}
+      STRIPE_WEBHOOK_SECRET: ${{secrets.STRIPE_WEBHOOK_SECRET}}
+      SUPPORT_EMAIL: ${{secrets.SUPPORT_EMAIL}}
+      DEV_POSTMARKAPI_KEY: ${{secrets.DEV_POSTMARKAPI_KEY}}
+      PROD_POSTMARKAPI_KEY: ${{secrets.PROD_POSTMARKAPI_KEY}}
+      APP_ENV: testing
+      DEV_URL: ${{secrets.DEV_URL}}
+      APP_URL: ${{secrets.APP_URL}}
+      TEST_HOST_UID: ${{secrets.TEST_HOST_UID}}
+      TEST_CUSTOMER_UID: ${{secrets.TEST_CUSTOMER_UID}}
+      TEST_ADMIN_UID: ${{secrets.TEST_ADMIN_UID}}
+      EXPO_ACCESS_TOKEN: ${{secrets.EXPO_ACCESS_TOKEN}}
+      DEV_EXPO_ACCESS_TOKEN: ${{secrets.DEV_EXPO_ACCESS_TOKEN}}
+      DEV_MOBILE_APP_SCHEME: ${{secrets.DEV_MOBILE_APP_SCHEME}}
+      MOBILE_APP_SCHEME: ${{secrets.MOBILE_APP_SCHEME}}
+      TEST_PUSH_TOKEN: ${{secrets.TEST_PUSH_TOKEN}}
+      DEV_CONTROL_PANEL_URL: ${{secrets.DEV_CONTROL_PANEL_URL}}
+      CONTROL_PANEL_URL: ${{secrets.CONTROL_PANEL_URL}}
+      MTN_COLLECTION_USER_ID: ${{secrets.MTN_COLLECTION_USER_ID}}
+      MTN_DISBURSEMENT_USER_ID: ${{secrets.MTN_DISBURSEMENT_USER_ID}}
+      MTN_COLLECTION_API_KEY: ${{secrets.MTN_COLLECTION_API_KEY}}
+      MTN_DISBURSEMENT_API_KEY: ${{secrets.MTN_DISBURSEMENT_API_KEY}}
+      MTN_TEST_URL: ${{secrets.MTN_TEST_URL}}
+      MTN_PROD_URL: ${{secrets.MTN_PROD_URL}}
+      MTN_COLLECTION_SUBSCRIPTION_KEY: ${{secrets.MTN_COLLECTION_SUBSCRIPTION_KEY}}
+      MTN_DISBURSEMENT_SUBSCRIPTION_KEY: ${{secrets.MTN_DISBURSEMENT_SUBSCRIPTION_KEY}}
+      MTN_ENVIRONMENT: ${{secrets.MTN_ENVIRONMENT}}
+      SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      SENTRY_ENV: ${{secrets.SENTRY_ENV}}
+      MPESA_CALLBACK_URL: ${{secrets.MPESA_CALLBACK_URL}}
+      MTN_CALLBACK_URL: ${{secrets.MTN_CALLBACK_URL}}
+      C2B_MPESA_CONSUMER_KEY: ${{secrets.C2B_MPESA_CONSUMER_KEY}}
+      C2B_MPESA_CONSUMER_SECRET: ${{secrets.C2B_MPESA_CONSUMER_SECRET}}
+      C2B_MPESA_SHORT_CODE: ${{secrets.C2B_MPESA_SHORT_CODE}}
+      C2B_MPESA_PASS_KEY: ${{secrets.C2B_MPESA_PASS_KEY}}
+      B2C_MPESA_CONSUMER_KEY: ${{secrets.B2C_MPESA_CONSUMER_KEY}}
+      B2C_MPESA_CONSUMER_SECRET: ${{secrets.B2C_MPESA_CONSUMER_SECRET}}
+      B2C_MPESA_SHORT_CODE: ${{secrets.B2C_MPESA_SHORT_CODE}}
+      B2C_MPESA_PASS_KEY: ${{secrets.B2C_MPESA_PASS_KEY}}
+      B2C_MPESA_PASSWORD: ${{secrets.B2C_MPESA_PASSWORD}}
+      B2C_MPESA_BUSINESS_NAME: ${{secrets.B2C_MPESA_BUSINESS_NAME}}
+      C2B_MPESA_BUSINESS_NAME: ${{secrets.C2B_MPESA_BUSINESS_NAME}}
+      MPESA_TEST_NUMBER: ${{secrets.MPESA_TEST_NUMBER}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "19.x"
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Prisma Generate
+        run: npx prisma generate
+
+      - name: Run Application Tests
+        run: yarn test
+
+  Deploy:
+    needs: Test
+    runs-on: self-hosted
+    environment: Staging
+    env:
+      RUNNER_LABEL: Niebex_KE_Testing
+      MONGO_CONNECTION_STRING: ${{secrets.MONGO_CONNECTION_STRING}}
+      PORT: ${{secrets.PORT}}
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      STRIPE_SECRET_KEY: ${{secrets.STRIPE_SECRET_KEY}}
+      APP_SECRET: ${{secrets.APP_SECRET}}
+      STRIPE_WEBHOOK_SECRET: ${{secrets.STRIPE_WEBHOOK_SECRET}}
+      SUPPORT_EMAIL: ${{secrets.SUPPORT_EMAIL}}
+      DEV_POSTMARKAPI_KEY: ${{secrets.DEV_POSTMARKAPI_KEY}}
+      PROD_POSTMARKAPI_KEY: ${{secrets.PROD_POSTMARKAPI_KEY}}
+      APP_ENV: testing
+      DEV_URL: ${{secrets.DEV_URL}}
+      APP_URL: ${{secrets.APP_URL}}
+      TEST_HOST_UID: ${{secrets.TEST_HOST_UID}}
+      TEST_CUSTOMER_UID: ${{secrets.TEST_CUSTOMER_UID}}
+      TEST_ADMIN_UID: ${{secrets.TEST_ADMIN_UID}}
+      EXPO_ACCESS_TOKEN: ${{secrets.EXPO_ACCESS_TOKEN}}
+      DEV_EXPO_ACCESS_TOKEN: ${{secrets.DEV_EXPO_ACCESS_TOKEN}}
+      DEV_MOBILE_APP_SCHEME: ${{secrets.DEV_MOBILE_APP_SCHEME}}
+      MOBILE_APP_SCHEME: ${{secrets.MOBILE_APP_SCHEME}}
+      TEST_PUSH_TOKEN: ${{secrets.TEST_PUSH_TOKEN}}
+      DEV_CONTROL_PANEL_URL: ${{secrets.DEV_CONTROL_PANEL_URL}}
+      CONTROL_PANEL_URL: ${{secrets.CONTROL_PANEL_URL}}
+      MTN_COLLECTION_USER_ID: ${{secrets.MTN_COLLECTION_USER_ID}}
+      MTN_DISBURSEMENT_USER_ID: ${{secrets.MTN_DISBURSEMENT_USER_ID}}
+      MTN_COLLECTION_API_KEY: ${{secrets.MTN_COLLECTION_API_KEY}}
+      MTN_DISBURSEMENT_API_KEY: ${{secrets.MTN_DISBURSEMENT_API_KEY}}
+      MTN_TEST_URL: ${{secrets.MTN_TEST_URL}}
+      MTN_PROD_URL: ${{secrets.MTN_PROD_URL}}
+      MTN_COLLECTION_SUBSCRIPTION_KEY: ${{secrets.MTN_COLLECTION_SUBSCRIPTION_KEY}}
+      MTN_DISBURSEMENT_SUBSCRIPTION_KEY: ${{secrets.MTN_DISBURSEMENT_SUBSCRIPTION_KEY}}
+      MTN_ENVIRONMENT: ${{secrets.MTN_ENVIRONMENT}}
+      SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      SENTRY_ENV: ${{secrets.SENTRY_ENV}}
+      MPESA_CALLBACK_URL: ${{secrets.MPESA_CALLBACK_URL}}
+      MTN_CALLBACK_URL: ${{secrets.MTN_CALLBACK_URL}}
+      C2B_MPESA_CONSUMER_KEY: ${{secrets.C2B_MPESA_CONSUMER_KEY}}
+      C2B_MPESA_CONSUMER_SECRET: ${{secrets.C2B_MPESA_CONSUMER_SECRET}}
+      C2B_MPESA_SHORT_CODE: ${{secrets.C2B_MPESA_SHORT_CODE}}
+      C2B_MPESA_PASS_KEY: ${{secrets.C2B_MPESA_PASS_KEY}}
+      B2C_MPESA_CONSUMER_KEY: ${{secrets.B2C_MPESA_CONSUMER_KEY}}
+      B2C_MPESA_CONSUMER_SECRET: ${{secrets.B2C_MPESA_CONSUMER_SECRET}}
+      B2C_MPESA_SHORT_CODE: ${{secrets.B2C_MPESA_SHORT_CODE}}
+      B2C_MPESA_PASS_KEY: ${{secrets.B2C_MPESA_PASS_KEY}}
+      B2C_MPESA_PASSWORD: ${{secrets.B2C_MPESA_PASSWORD}}
+      B2C_MPESA_BUSINESS_NAME: ${{secrets.B2C_MPESA_BUSINESS_NAME}}
+      C2B_MPESA_BUSINESS_NAME: ${{secrets.C2B_MPESA_BUSINESS_NAME}}
+      MPESA_TEST_NUMBER: ${{secrets.MPESA_TEST_NUMBER}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Make script executable
+        run: chmod +x ./scripts/cleanupTesting.sh
+
+      - name: Cleanup
+        run: sudo ./scripts/cleanupTesting.sh
+
+      - name: Buid the docker image
+        run: |
+          docker build -t divvly-api-testing \
+            --build-arg MONGO_CONNECTION_STRING=$MONGO_CONNECTION_STRING \
+            --build-arg PORT=$PORT \
+            --build-arg DATABASE_URL=$DATABASE_URL \
+            --build-arg STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY \
+            --build-arg APP_SECRET=$APP_SECRET \
+            --build-arg STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET \
+            --build-arg SUPPORT_EMAIL=$SUPPORT_EMAIL \
+            --build-arg DEV_POSTMARKAPI_KEY=$DEV_POSTMARKAPI_KEY \
+            --build-arg PROD_POSTMARKAPI_KEY=$PROD_POSTMARKAPI_KEY \
+            --build-arg APP_ENV=staging \
+            --build-arg DEV_URL=$DEV_URL \
+            --build-arg APP_URL=$APP_URL \
+            --build-arg TEST_HOST_UID=$TEST_HOST_UID \
+            --build-arg TEST_CUSTOMER_UID=$TEST_CUSTOMER_UID \
+            --build-arg TEST_ADMIN_UID=$TEST_ADMIN_UID \
+            --build-arg EXPO_ACCESS_TOKEN=$EXPO_ACCESS_TOKEN \
+            --build-arg DEV_EXPO_ACCESS_TOKEN=$DEV_EXPO_ACCESS_TOKEN \
+            --build-arg DEV_MOBILE_APP_SCHEME=$DEV_MOBILE_APP_SCHEME \
+            --build-arg MOBILE_APP_SCHEME=$MOBILE_APP_SCHEME \
+            --build-arg TEST_PUSH_TOKEN=$TEST_PUSH_TOKEN \
+            --build-arg DEV_CONTROL_PANEL_URL=$DEV_CONTROL_PANEL_URL \
+            --build-arg CONTROL_PANEL_URL=$CONTROL_PANEL_URL \
+            --build-arg MTN_COLLECTION_USER_ID=$MTN_COLLECTION_USER_ID \
+            --build-arg MTN_DISBURSEMENT_USER_ID=$MTN_DISBURSEMENT_USER_ID \
+            --build-arg MTN_COLLECTION_API_KEY=$MTN_COLLECTION_API_KEY \
+            --build-arg MTN_DISBURSEMENT_API_KEY=$MTN_DISBURSEMENT_API_KEY \
+            --build-arg MTN_TEST_URL=$MTN_TEST_URL \
+            --build-arg MTN_PROD_URL=$MTN_PROD_URL \
+            --build-arg MTN_COLLECTION_SUBSCRIPTION_KEY=$MTN_COLLECTION_SUBSCRIPTION_KEY \
+            --build-arg MTN_DISBURSEMENT_SUBSCRIPTION_KEY=$MTN_DISBURSEMENT_SUBSCRIPTION_KEY \
+            --build-arg MTN_ENVIRONMENT=$MTN_ENVIRONMENT \
+            --build-arg SENTRY_DSN=$SENTRY_DSN \
+            --build-arg SENTRY_ENV=$SENTRY_ENV \
+            --build-arg MPESA_CALLBACK_URL=$MPESA_CALLBACK_URL \
+            --build-arg MTN_CALLBACK_URL=$MTN_CALLBACK_URL \
+            --build-arg C2B_MPESA_CONSUMER_KEY=$C2B_MPESA_CONSUMER_KEY \
+            --build-arg C2B_MPESA_CONSUMER_SECRET=$C2B_MPESA_CONSUMER_SECRET \
+            --build-arg C2B_MPESA_SHORT_CODE=$C2B_MPESA_SHORT_CODE \
+            --build-arg C2B_MPESA_PASS_KEY=$C2B_MPESA_PASS_KEY \
+            --build-arg B2C_MPESA_CONSUMER_KEY=$B2C_MPESA_CONSUMER_KEY \
+            --build-arg B2C_MPESA_CONSUMER_SECRET=$B2C_MPESA_CONSUMER_SECRET \
+            --build-arg B2C_MPESA_SHORT_CODE=$B2C_MPESA_SHORT_CODE \
+            --build-arg B2C_MPESA_PASS_KEY=$B2C_MPESA_PASS_KEY \
+            --build-arg B2C_MPESA_PASSWORD=$B2C_MPESA_PASSWORD \
+            --build-arg B2C_MPESA_BUSINESS_NAME=$B2C_MPESA_BUSINESS_NAME \
+            --build-arg C2B_MPESA_BUSINESS_NAME=$C2B_MPESA_BUSINESS_NAME \
+            --build-arg MPESA_TEST_NUMBER=$MPESA_TEST_NUMBER \
+            .
+
+      - name: Start the docker container
+        run: docker run -d -p 8081:8080 divvly-api-testing

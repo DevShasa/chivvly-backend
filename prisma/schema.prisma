@@ -1,0 +1,468 @@
+// Setting up the prisma client
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Custom Type Definitions
+
+enum UserType {
+  HOST
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  NONACTIVE
+  BANNED
+  SUSPENDED
+}
+
+// -> this is basically to monitor the status of different items e.g vehicle 
+enum tITemStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum tCurrencyType {
+  KES
+  USD
+  ZSD
+  GBP
+  CAD
+  THB
+  RWF // Rwanda Franc
+  EUR // Euro (this is to support mtn testing)
+  ZAR
+}
+
+enum tReservationStatus {
+  COMPLETE
+  ACTIVE
+  UPCOMING
+  CANCELLED
+  OTHER
+  PENDING_CONFIRMATION // for cash payments 
+}
+
+enum tPaymentStatus {
+  REQUIRES_PAYMENT_METHOD
+  REQUIRES_CONFIRMATION
+  REQUIRES_ACTION
+  PROCESSING
+  REQUIRES_CAPTURE
+  CANCELLED
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum tPayoutStatus {
+  PROCESSING
+  FAILED
+  CANCELLED
+  SUCCEEDED
+  HOLD
+}
+
+enum tPaymentTypes {
+  STRIPE
+  MPESA
+  PAYPAL
+  UNKNOWN
+}
+
+enum tTransmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum tVehiclePicture {
+  ACTIVE
+  NONACTIVE
+  BLOCKED
+}
+
+enum tBookingStatus {
+  ACTIVE
+  NONACTIVE
+  CANCELLED
+  PENDING
+}
+
+enum tAuthCodeStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+  NONACTIVE
+}
+
+enum tPaymentTypeStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum tIssueStatus {
+  RESOLVED
+  PENDING
+  DUPLICATE
+}
+
+enum tReservationType {
+  HOURLY
+  DAILY
+  BLOCK
+  HOST
+}
+
+enum tPayoutMethodType {
+  MPESA
+  BANK_ACCOUNT
+  PAYPAL
+  MTN
+  // other types of payment methods can later be added
+}
+
+// Schema Definitions
+
+// User
+model User {
+  id                   String             @id @default(uuid()) @db.Uuid
+  email                String             @unique
+  lname                String?
+  fname                String?
+  handle               String             @unique
+  phone                String?
+  profile_pic_url      String?
+  market               Market?            @relation(fields: [market_id], references: [id])
+  market_id            String?            @db.Uuid
+  sub_market           SubMarket?         @relation(fields: [sub_market_id], references: [id])
+  sub_market_id        String?            @db.Uuid
+  user_type            UserType // this will help distinguish between hosts and customers
+  status               UserStatus         @default(ACTIVE)
+  connected_account_id String? // this is for stripe
+  customer_id          String? // this is also for stripe
+  description          String? // this is for hosts only
+  payment_types        PaymentTypes[]
+  reservations         Reservation[]
+  vehicle              Vehicle[]
+  user_settings        UserSettings?
+  uid                  String             @unique
+  DriverCredentials    DriverCredentials?
+  Payout               Payout[]
+  Issue                Issue[]
+  AuthCodeTable        AuthCode[]         @relation("host")
+  AuthCodeUser         AuthCode[]         @relation("user")
+  Payment              Payment[]
+  PayoutMethod         PayoutMethod[]
+  is_admin             Boolean            @default(false)
+  sent_invites         Invitation[]       @relation("sent_invites")
+  issued_payouts       Payout[]           @relation("issued_payouts")
+  withdrawals          Withdrawal[]
+  created_at           DateTime           @default(now()) @db.Timestamptz(3)
+}
+
+// Invitations - these are made for admin users, and are used to invite admin users to the platform
+model Invitation {
+  id         String   @id @default(uuid()) @db.Uuid
+  email      String
+  code       String   @unique
+  expires_at DateTime @db.Timestamptz(3)
+  uid        String   @unique
+  activated  Boolean  @default(false)
+  sender     User?    @relation(fields: [sender_id], references: [id], name: "sent_invites") // optional to allow for the initial admin user
+  sender_id  String?  @db.Uuid // this is the id of the user who sent the invitation
+}
+
+// Driver Credentials - this is the info like drivers liscence and any other info like if its verified etc that will be decided on later
+model DriverCredentials {
+  id                    String      @id @default(uuid()) @db.Uuid
+  user                  User        @relation(fields: [user_id], references: [id])
+  user_id               String      @unique @db.Uuid
+  drivers_licence_front String?
+  drivers_licence_back  String?
+  drivers_licence       String?
+  is_verified           Boolean     @default(false)
+  status                tITemStatus @default(ACTIVE)
+  driver_licence_expiry DateTime?   @db.Timestamptz(3)
+}
+
+// PaymentTypes - the only use case for this is the mpesa intergration, stripe can handle the rest
+model PaymentTypes {
+  id                       String             @id @default(uuid()) @db.Uuid
+  user                     User               @relation(fields: [user_id], references: [id])
+  user_id                  String             @db.Uuid
+  status                   tPaymentTypeStatus @default(ACTIVE)
+  details                  Json? // will phase this out, in favour of phone_number for mpesa and card info can be fetched from stripe
+  phone_number             BigInt? // this is for mpesa - mpesa's api explicitly requires a phone number in int format // int cannt handle 2547xxxxxxx so we use BigInt
+  payments                 Payment[]
+  stripe_payment_method_id String? // this is for stripe
+  type                     String             @default("STRIPE") // moving type validation over to zod and not prisma, so that any additions don't require a db migration
+  is_primary               Boolean            @default(false) // added as of pr#144  on divvly
+  created_at               DateTime           @default(now()) @db.Timestamptz(3)
+}
+
+// Markets
+model Market {
+  id        String        @id @default(uuid()) @db.Uuid
+  country   String        @unique
+  name      String        @unique
+  User      User[]
+  SubMarket SubMarket[]
+  status    tITemStatus   @default(ACTIVE)
+  currency  tCurrencyType
+  Payout    Payout[]
+  Issue     Issue[]
+}
+
+// Sub Market
+model SubMarket {
+  id        String      @id @default(uuid()) @db.Uuid
+  market    Market      @relation(fields: [market_id], references: [id])
+  market_id String      @db.Uuid
+  name      String      @unique
+  Station   Station[]
+  User      User[]
+  status    tITemStatus @default(ACTIVE)
+}
+
+// Station
+model Station {
+  id            String      @id @default(uuid()) @db.Uuid
+  name          String
+  description   String?
+  image         String?
+  sub_market_id String      @db.Uuid
+  sub_market    SubMarket   @relation(fields: [sub_market_id], references: [id])
+  vehicle       Vehicle[]
+  user_id       String      @db.Uuid
+  status        tITemStatus @default(ACTIVE)
+  latitude      Float?
+  longitude     Float?
+  created_at    DateTime    @default(now()) @db.Timestamptz(3)
+}
+
+// Reservation
+model Reservation {
+  id              String             @id @default(uuid()) @db.Uuid
+  user            User               @relation(fields: [user_id], references: [id])
+  user_id         String             @db.Uuid
+  vehicle         Vehicle            @relation(fields: [vehicle_id], references: [id])
+  vehicle_id      String             @db.Uuid
+  start_date_time DateTime           @db.Timestamptz(3)
+  end_date_time   DateTime           @db.Timestamptz(3)
+  created_at      DateTime           @default(now()) @db.Timestamptz(3)
+  updated_at      DateTime           @updatedAt @db.Timestamptz(3)
+  // hourly_rate     String taken care of by the vehicle
+  // currency        CurrencyType      @default(USD) // this will be taken care of by the market
+  status          tReservationStatus @default(UPCOMING)
+  type            tReservationType   @default(HOURLY)
+  Issue           Issue[]
+  payment         Payment?           @relation(fields: [payment_id], references: [id])
+  payment_id      String?            @unique @db.Uuid
+  inspection      Inspection?        @relation("inspection")
+  payment_method  String?            // for payment methods like cash where no payment method in the db is used
+}
+
+// Inspection
+model Inspection {
+  id             String      @id @default(uuid()) @db.Uuid
+  created_at     DateTime    @default(now()) @db.Timestamptz(3)
+  updated_at     DateTime    @updatedAt @db.Timestamptz(3)
+  reservation    Reservation @relation(fields: [reservation_id], references: [id], name: "inspection")
+  reservation_id String      @unique @db.Uuid
+  questions      Json? // this will be a json array with the question data i.e images, the question and the answer
+  fuel           Float?      @default(0)
+}
+
+// Payment
+model Payment {
+  id                String         @id @default(uuid()) @db.Uuid
+  payment_type      PaymentTypes?  @relation(fields: [payment_type_id], references: [id])
+  payment_type_id   String?        @db.Uuid
+  account_number    String?
+  authorization     String? // an authorization token will be a jwt token, generated at the time the customer starts the payment process, and will be used to verify the payment when a reservation is getting created
+  paymentToken      String? // for mpesa payments this is going to be the checkout request id, for mtn this is gonna be the payment reference id
+  amount            Float
+  tax               Float?
+  date_time         DateTime       @default(now()) @db.Timestamptz(3)
+  status            tPaymentStatus @default(SUCCEEDED)
+  stripe_payment_id String? // this is for stripe
+  user              User           @relation(fields: [user_id], references: [id])
+  user_id           String         @db.Uuid
+  receipt_number    String? // this is for mpesa
+  Reservation       Reservation?
+}
+
+//vehicle
+model Vehicle {
+  id                 String            @id @default(uuid()) @db.Uuid
+  host               User              @relation(fields: [user_id], references: [id])
+  user_id            String            @db.Uuid
+  station            Station           @relation(fields: [station_id], references: [id])
+  station_id         String            @db.Uuid //  this also takes care of the market id
+  // address            String?  -> having a staton takes care of this
+  // building_name      String?  -> having a station also takes care of this
+  color              String?
+  seats              Int?
+  plate              String?
+  transmission       String?           @default("MANUAL")
+  year               Int?
+  make               String?
+  model              String?
+  hourly_rate        Float?
+  // currency           CurrencyType      @default(USD)  -> this gets taken care of by the market
+  tracking_device_id String?
+  reservation        Reservation[]
+  VehiclePictures    VehiclePictures[]
+  pictures           String[]
+  status             tITemStatus       @default(ACTIVE)
+  AuthCodeTable      AuthCode[]
+  created_at         DateTime          @default(now()) @db.Timestamptz(3)
+}
+
+//vehicle pictures
+model VehiclePictures {
+  id         String          @id @default(uuid()) @db.Uuid
+  vehicle    Vehicle         @relation(fields: [vehicle_id], references: [id])
+  vehicle_id String          @db.Uuid
+  url        String
+  status     tVehiclePicture @default(ACTIVE)
+}
+
+// tracking
+// no need for this, itll just be a one to one relationship with the vehicle
+// model Tracking {
+//   id         String @id @default(uuid())
+//   vehicle_id String
+// }
+
+// UserSettings
+model UserSettings {
+  id                    String     @id @default(uuid()) @db.Uuid
+  notifications_enabled Boolean
+  user                  User       @relation(fields: [user_id], references: [id])
+  user_id               String     @unique @db.Uuid
+  PushToken             PushToken?
+  tracking_enabled      Boolean    @default(false)
+}
+
+// PushTokens - we only require the active push token, so we could just replace
+model PushToken {
+  id               String       @id @default(uuid()) @db.Uuid
+  token            String       
+  user_settings    UserSettings @relation(fields: [user_settings_id], references: [id])
+  user_settings_id String       @unique @db.Uuid
+}
+
+// BookingTable
+// no need for this, itll just be a one to one relationship with the reservation table
+// model BookingTable {
+//   id              String        @id @default(uuid())
+//   vehicle_id      String
+//   start_date_time DateTime
+//   end_date_time   DateTime
+//   status          BookingStatus
+// }
+
+// AuthCode 
+// @TODO: once specification for this is completed, will review this
+model AuthCode {
+  id               String          @id @default(uuid()) @db.Uuid
+  host             User            @relation("host", fields: [host_id], references: [id])
+  host_id          String          @db.Uuid
+  user             User            @relation("user", fields: [user_id], references: [id])
+  user_id          String          @db.Uuid
+  code             String          @unique
+  vehicle          Vehicle         @relation(fields: [vehicle_id], references: [id])
+  vehicle_id       String          @db.Uuid
+  status           tAuthCodeStatus @default(NONACTIVE)
+  expiry_date_time DateTime        @db.Timestamptz(3)
+  created_at       DateTime        @default(now()) @db.Timestamptz(3)
+}
+
+enum tPayoutType {
+  HOST_PAYMENT
+  CUSTOMER_REFUND
+}
+
+// Payout
+model Payout {
+  id               String        @id @unique @default(uuid()) @db.Uuid
+  user             User          @relation(fields: [user_id], references: [id])
+  user_id          String        @db.Uuid
+  amount           Float?
+  date             DateTime      @default(now()) @db.Timestamptz(3)
+  market           Market        @relation(fields: [market_id], references: [id])
+  market_id        String        @db.Uuid
+  status           tPayoutStatus @default(PROCESSING)
+  payout_method    PayoutMethod? @relation(fields: [payout_method_id], references: [id])
+  payout_method_id String?       @db.Uuid
+  payout_issuer    User?         @relation(fields: [issuer_id], references: [id], name: "issued_payouts")
+  issuer_id        String?       @db.Uuid // for mpesa payouts, this enables us to know what admin issued the payout
+  payout_token     String // this payout token, is like a universal identifier that can be used to identify the payout i.e both in the app and on the respective payment platform e.g mpesa receipt ans stripe payout id
+  type             tPayoutType   @default(HOST_PAYMENT)
+  withdrawal       Withdrawal?   @relation(fields: [withdrawal_id], references: [id])
+  withdrawal_id    String?       @db.Uuid
+}
+
+// Issue
+model Issue {
+  id             String       @id @default(uuid()) @db.Uuid
+  user           User         @relation(fields: [user_id], references: [id])
+  user_id        String       @db.Uuid
+  status         tIssueStatus @default(PENDING)
+  complaint      String       @default("")
+  Market         Market?      @relation(fields: [marketId], references: [id])
+  marketId       String?      @db.Uuid
+  Reservation    Reservation? @relation(fields: [reservation_id], references: [id])
+  reservation_id String?      @db.Uuid
+  created_at     DateTime     @default(now()) @db.Timestamptz(3)
+}
+
+//PayoutMethod 
+// for bank account payouts stripe is the best solution, and there is no need for the host to signup to stripe
+// this model is to enable flexibility with other payment methods apart from bank account like paypal and mobile money
+// it will  probably need to be updated to include the payment method specific fields later but for now I'll use stripe's
+// the platform will still have control of the payment schedule and their cut
+model PayoutMethod {
+  id                   String            @id @unique @default(uuid()) @db.Uuid
+  user                 User              @relation(fields: [user_id], references: [id])
+  user_id              String            @db.Uuid
+  connected_account_id String? // this will only be for stripe
+  mobile_money_number  String?
+  paypal_email         String?
+  type                 tPayoutMethodType @default(BANK_ACCOUNT)
+  Payout               Payout[]
+  verified             Boolean           @default(false) //gets verified after the host completes onboarding with stripe
+  status               tITemStatus       @default(ACTIVE) // this will be used when users want to activate or deactivate payout methods
+  details              Json?             @default("{}") // this will be used to store the details of the payout method e.g bank account details
+  withdrawals          Withdrawal[]
+  created_at           DateTime          @default(now()) @db.Timestamptz(3)
+}
+
+enum tWithdrawalStatus {
+  PENDING // pending approval
+  APPROVED // approved by an admin
+  PROCESSING // processing the payment
+  COMPLETED // payment completed
+  FAILED
+  CANCELLED
+}
+
+model Withdrawal {
+  id               String            @id @unique @default(uuid()) @db.Uuid
+  user             User              @relation(fields: [user_id], references: [id])
+  user_id          String            @db.Uuid
+  amount           Float?
+  status           tWithdrawalStatus @default(PENDING)
+  created_at        DateTime          @default(now()) @db.Timestamptz(3)
+  payout_method    PayoutMethod     @relation(fields: [payout_method_id], references: [id])
+  payout_method_id String           @db.Uuid
+  payouts           Payout[]
+}

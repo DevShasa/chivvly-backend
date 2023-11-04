@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "divvly",
+    "testing": "divvly",
+    "production": "divvy-prod"
+  },
+  "targets": {},
+  "etags": {}
+}
