@@ -1,5 +1,4 @@
-# niebex-api
-Niebex Api Service
+
 
 ## Installation
 - After cloning the project, install dependencies using `npm i`
